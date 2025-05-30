@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 
 export type Appearance = 'light' | 'dark' | 'system';
 
+const DEFAULT_APPEARANCE = 'light';
+
 const prefersDark = () => {
     if (typeof window === 'undefined') {
         return false;
@@ -39,7 +41,7 @@ const handleSystemThemeChange = () => {
 };
 
 export function initializeTheme() {
-    const savedAppearance = (localStorage.getItem('appearance') as Appearance) || 'system';
+    const savedAppearance = (localStorage.getItem('appearance') as Appearance) || DEFAULT_APPEARANCE;
 
     applyTheme(savedAppearance);
 
@@ -48,7 +50,7 @@ export function initializeTheme() {
 }
 
 export function useAppearance() {
-    const [appearance, setAppearance] = useState<Appearance>('system');
+    const [appearance, setAppearance] = useState<Appearance>(DEFAULT_APPEARANCE);
 
     const updateAppearance = useCallback((mode: Appearance) => {
         setAppearance(mode);
@@ -64,7 +66,7 @@ export function useAppearance() {
 
     useEffect(() => {
         const savedAppearance = localStorage.getItem('appearance') as Appearance | null;
-        updateAppearance(savedAppearance || 'system');
+        updateAppearance(savedAppearance || DEFAULT_APPEARANCE);
 
         return () => mediaQuery()?.removeEventListener('change', handleSystemThemeChange);
     }, [updateAppearance]);
